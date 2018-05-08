@@ -25,6 +25,37 @@ tensXY = ((0,1), (1,1), (2,1), (3,1), (4,1), (0,2), (1,2), (2,2), (3,2), (4,2))
 onesXY = ((0,3), (1,3), (2,3), (3,3), (4,3), (0,4), (1,4), (2,4), (3,4), (4,4))
 
 #UTILITY FUNCTIONS
+def displayScore(activeTeamListItem):
+	score = scores[activeTeamListItem]
+	#divmod creates two vars
+	# The first's value is how many whole times the specified number divides into the value you feed it;
+	# the second's value is the remainder one your number has been divided
+	#In this case: How many times does 10 go into x (which gives you total 10s); and how much is left over (which gives total 1s)
+	tens, ones = divmod(score, 10)
+	#Iterate for each tens XY pair in list
+	for i, coords in enumerate(tensXY):
+		x = coords[0]
+		y = coords[1]
+		#If item is less than the value of how many tens there are in the score then set that item's LED to on
+		if i < tens:
+			display.set_pixel(x,y,9)
+		#Otherwise set to off
+		else:
+			display.set_pixel(x,y,0)
+	#Iterate for each ones XY pair in list
+	for i, coords in enumerate(onesXY):
+		x = coords[0]
+		y = coords[1]
+		if i < ones:
+			display.set_pixel(x,y,9)
+		else:
+			display.set_pixel(x,y,0)
+
+def writeFile(fileName, content):
+	#Open file in write mode and write content to it. Overwrites all previous data.
+	with open(fileName, 'w') as f:
+		f.write(str(content))
+
 
 def fileExists(fileName):
 	#Loop through all files in directory and return True if file name exists
@@ -116,8 +147,71 @@ def setTeams():
 		stage = 'scoring'
 
 #Scoring with sub functions
+
 def scoring():
-	print('reset')
+	global activeTeam
+	global totalTeams
+	global funcStage
+	global stage
+	global totalTeams
+	global isFiles
+
+	if funcStage == 'start':
+		#Show active team
+		if activeTeam == 0:
+			#On load is the only time activeTeam will be set to 0.
+			# On load check if files and if so display the first teams; score
+			if isFiles:
+				displayScore(activeTeam)
+			activeTeam = 1
+		#Iterate for each ones XY pair in list
+		for i, coords in enumerate(teamsXY):
+			x = coords[0]
+			y = coords[1]
+			#if active team then switch light on otherwise switch light off
+			if i == activeTeam - 1:
+				display.set_pixel(x,y,9)
+			else:
+				display.set_pixel(x,y,0)
+		funcStage = 'controls'
+	else:
+		#Increase or decrease score of active team
+		if button_b.was_pressed():
+			activeTeamListItem = activeTeam - 1
+			if scores[activeTeamListItem] < 110:
+				scores[activeTeamListItem] += 1
+			else:
+				display.show('Limit')
+			#filename constructed var + number from loop + .txt file extension. 
+			# Number from loops needs to be converted to string to be a file name.
+			writeFile(scoreFileName + str(activeTeam) + '.txt', scores[activeTeamListItem])
+			displayScore(activeTeamListItem)
+		elif button_a.was_pressed():
+			activeTeamListItem = activeTeam - 1
+			if scores[activeTeamListItem] > 0:
+				scores[activeTeamListItem] -= 1
+			writeFile(scoreFileName + str(activeTeam) + '.txt', scores[activeTeamListItem])
+			displayScore(activeTeamListItem)
+		#Left and right gestures to switch teams for scoring
+		elif accelerometer.was_gesture('right'):
+			if activeTeam < totalTeams:
+				activeTeam += 1
+			else:
+				activeTeam = 1
+			funcStage = 'start'
+			displayScore(activeTeam - 1)
+		elif accelerometer.was_gesture('left'):
+			if activeTeam > 1:
+				activeTeam -= 1
+			else:
+				activeTeam = totalTeams
+			funcStage = 'start'
+			displayScore(activeTeam - 1)
+		#If Micro"bit is shaken then start reset function
+		elif accelerometer.was_gesture('shake'):
+			funcStage = 'start'
+			stage = 'reset'
+			print('shaken')
 
 
 #Ask if want reset.
