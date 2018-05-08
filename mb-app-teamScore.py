@@ -1,5 +1,27 @@
 from microbit import*
 
+maxTeams = 5
+stageWait = 3000
+totalTeams = 0
+activeTeam = 0
+
+stage = 'start'
+funcStage = 'start'
+isFiles = False
+timeCompare = 0
+pressed = False
+scoreFileName = 'scoreTeam'
+
+#TEAM VARS
+
+scores = [0,0,0,0,0]
+
+#LED display X,Y coords
+teamsXY = ((0,0), (1,0), (2,0), (3,0), (4,0))
+
+tensXY = ((0,1), (1,1), (2,1), (3,1), (4,1), (0,2), (1,2), (2,2), (3,2), (4,2))
+
+onesXY = ((0,3), (1,3), (2,3), (3,3), (4,3), (0,4), (1,4), (2,4), (3,4), (4,4))
 
 #APP STAGE FUNCTIONS
 
