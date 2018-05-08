@@ -56,6 +56,8 @@ def writeFile(fileName, content):
 	with open(fileName, 'w') as f:
 		f.write(str(content))
 
+def deleteFile(fileName):
+	os.remove(fileName)
 
 def fileExists(fileName):
 	#Loop through all files in directory and return True if file name exists
@@ -218,7 +220,51 @@ def scoring():
 # Leave on N for 3s to return to scoring.
 # Leave on Y for 3s to delete files and reset vars and return to setTeams
 def reset():
-	print('reset')
+	global activeTeam
+	global funcStage
+	global isFiles
+	global maxTeams
+	global scoreFileName
+	global scores
+	global stage
+	global timeCompare
+	global totalTeams
+
+	if funcStage == 'start':
+		timeCompare = running_time()
+		display.clear()
+		funcStage = 'resetNo'
+	if funcStage == 'resetNo':
+		display.show('N')
+		if button_a.was_pressed() or button_b.was_pressed():
+			timeCompare = running_time()
+			funcStage = 'resetYes'
+		elif ifStageWait(timeCompare):
+			display.clear()
+			funcStage = 'start'
+			stage = 'scoring'
+			displayScore(activeTeam - 1)
+	if funcStage == 'resetYes':
+		display.show('Y')
+		if button_a.was_pressed() or button_b.was_pressed():
+			display.clear()
+			timeCompare = running_time()
+			funcStage = 'resetNo'
+		elif ifStageWait(timeCompare):
+			for i in range(maxTeams):
+				fileIndex = i + 1
+				fileName = scoreFileName + str(fileIndex) + '.txt'
+				#Check if file exists then delete it
+				if fileExists(fileName):
+					deleteFile(fileName)
+				else:
+					break
+			activeTeam = 0
+			funcStage = 'start'
+			isFiles = False
+			scores = [0,0,0,0,0]
+			stage = 'setTeams'
+			totalTeams = 0
 
 #RUN APP
 while True:
