@@ -40,6 +40,14 @@ def readFileInt(fileName):
 		a = h.read()
 		return int(a)
 
+def ifStageWait(timeCompare):
+	#Return true if 3000ms have passed. Can adjust stageWait variable to lessen or lengthen wait period.
+	# Have to pass timeCompare as a parameter rather than global var as timeCompare is held within memory once the function is called once.
+	global stageWait
+	if running_time() - timeCompare >= stageWait:
+		return True
+	else:
+		return False
 
 #APP STAGE FUNCTIONS
 #Check if the score files exist.
@@ -73,7 +81,39 @@ def checkFiles():
 
 #Ask how many teams need to be scored
 def setTeams():
-	print('set teams')
+	global maxTeams
+	global pressed
+	global totalTeams
+	global stage
+	global stageWait
+	global timeCompare
+	#Increase by one if B pressed
+	if button_b.was_pressed():
+		timeCompare = running_time()
+		pressed = True
+		display.clear()
+		if totalTeams < maxTeams:
+			totalTeams += 1
+		else:
+			totalTeams = 1
+		display.show(str(totalTeams))
+	#Decrease by one if A pressed
+	elif button_a.was_pressed():
+		timeCompare = running_time()
+		pressed = True
+		display.clear()
+		if totalTeams > 1:
+			totalTeams -= 1
+		else:
+			totalTeams = maxTeams
+		display.show(str(totalTeams))
+	#If nothing pressed display '#?' i.e. How many?
+	elif pressed == False:
+		display.show('#?')
+	elif ifStageWait(timeCompare):
+		pressed = False
+		display.clear()
+		stage = 'scoring'
 
 #Scoring with sub functions
 def scoring():
