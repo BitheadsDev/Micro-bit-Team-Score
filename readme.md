@@ -4,7 +4,7 @@
 
 To keep track of up to five teams' scores
 
-### Details and controls
+## Details and controls
 
 * You can select up to five teams
 * Increase score using B button
@@ -14,7 +14,7 @@ To keep track of up to five teams' scores
 * We will save scores to files to allow power off and on to resume scoring
 * Shaking the device would prompt a reset request and deletion of files.
 
-### Things you need
+## Things you need
 
 * A Micro:bit
 * A USB lead
@@ -30,7 +30,7 @@ To keep track of up to five teams' scores
 * How to display lots of data in a compact format
 * How to reset the device by making a selection
 
-### The display
+## The display
 
 Due to only having a 25x25 screen resolution we have to be creative with our representation:
 
@@ -38,7 +38,7 @@ Due to only having a 25x25 screen resolution we have to be creative with our rep
 * The second and third rows of pixels would represent 10s e.g. `[0,1], [1,1], [2,1] = 30`. This means we could represent up to 100 using this method.
 * The forth and fifth rows of pixels would represent 1s e.g. `[0,3], [1,3], [2,3], [3,3], [3,4], [4,0] = 6`
 
-## Pseudocode runthrough
+## Initial pseudocode runthrough
 
 ```
 If previous save files:
@@ -111,3 +111,10 @@ reset:
             delete all files
             Call: setTeams (loop to beginning)
 ```
+
+## Possible extensions
+
+* Discuss the limitations of this program.
+* Is there a better way of representing teams and the score?
+* How could we represent more than five teams?
+* How could we represent a score of more than 110?
