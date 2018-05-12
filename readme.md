@@ -4,6 +4,11 @@
 
 To keep track of up to five teams' scores
 
+## View videos
+
+* Part one – showing the app in action: https://www.youtube.com/watch?v=epTNY8UVVE8
+* Part two – talking through the code: https://www.youtube.com/watch?v=wJzbub2Jd-Q
+
 ## Details and controls
 
 * You can select up to five teams
